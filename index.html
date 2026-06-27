@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRACE: Interactive Bi-Directional Cable Tracing Amid Clutter</title>
+  <meta name="description" content="TRACE combines bi-directional cable tracing with interactive perception primitives (Divergence Push and Cluster Dilation) to trace monochrome cables amid clutter." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" type="image/svg+xml" href="media/favicon.svg" />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Pre-hide hero only when motion is welcome; a safety timeout guarantees
+       content appears even if the motion module never loads (offline / CDN fail). */
+    (function () {
+      if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        document.documentElement.classList.add('reveal-pending');
+        setTimeout(function () {
+          document.documentElement.classList.remove('reveal-pending');
+        }, 1500);
+      }
+    })();
+  </script>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ─── Hero ──────────────────────────────────────────── -->
+  <header class="hero">
+    <p class="hero-kicker hero-reveal">IROS 2026 &middot; AUTOLab, UC Berkeley</p>
+    <h1 class="hero-reveal">TRACE: Interactive Bi-Directional Cable Tracing Amid Clutter</h1>
+
+    <div class="hero-meta hero-reveal">
+      <div class="hero-byline">
+        <div class="authors">
+          <!-- TODO: add per-author homepage links when available -->
+          Nidhya Shivakumar<sup>*1</sup><span class="author-sep">,</span>
+          Ethan Ransing<sup>*1</sup><span class="author-sep">,</span>
+          Josh Zhang<sup>1</sup><span class="author-sep">,</span>
+          Shamak Gowda<sup>1</sup><span class="author-sep">,</span>
+          Kevin Yang<sup>1</sup><span class="author-sep">,</span>
+          Justin Yu<sup>1</sup><span class="author-sep">,</span>
+          Ken Goldberg<sup>1</sup>
+        </div>
+        <div class="affiliations">
+          <span><sup>1</sup>AUTOLab at the University of California, Berkeley &middot; Berkeley AI Research (BAIR)</span>
+          <span><sup>*</sup>Equal contribution</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <a href="#" class="action-link" target="_blank" rel="noopener" title="TODO: link the IROS 2026 PDF">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="9" y1="13" x2="15" y2="13"/>
+            <line x1="9" y1="17" x2="15" y2="17"/>
+          </svg>
+          Paper (PDF)
+        </a>
+        <a href="#" class="action-link" target="_blank" rel="noopener" title="TODO: link the code repository">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          Code
+        </a>
+      </div>
+    </div>
+
+    <p class="hero-claim hero-reveal">
+      When every cable looks identical, a robot can&rsquo;t trace by sight. TRACE traces from
+      both ends, finds where the two estimates disagree, and physically acts to
+      resolve the ambiguity.
+    </p>
+
+    <figure class="hero-stage hero-reveal">
+      <img id="heroImg" src="media/run/iter_0.jpg" width="1400" height="779" fetchpriority="high" decoding="async" alt="A robot incrementally tracing monochrome cables, resolving crossings over eight iterations" />
+      <figcaption class="hero-badge" id="heroBadge" aria-hidden="true">Initial estimate</figcaption>
+    </figure>
+  </header>
+
+  <main>
+
+    <!-- § Result hook -->
+    <div class="section result-hook" id="result">
+      <p class="hook-line">
+        Across 60 cluttered trials, TRACE lifts cable-tracing accuracy from
+        <span class="stat">~60%</span> to <span class="stat">~90%</span>: a
+        <span class="stat">+77%</span> average gain over the prior state of the art,
+        and a perfect trace in <span class="stat">32&#8239;/&#8239;60</span> scenes.
+      </p>
+    </div>
+
+    <!-- § The monochrome challenge -->
+    <div class="section">
+      <h2>The monochrome tracing problem</h2>
+      <p>
+        Color makes tracing easy. When cables are <strong>monochrome</strong>, every strand is visually
+        indistinguishable. At each crossing it is ambiguous which way a cable continues. A robot cannot
+        rely on appearance; it must reason about geometry, and where geometry is ambiguous, it
+        must act to find out. Toggle below: all the visual system can anchor to are the detected
+        connector endpoints.
+      </p>
+      <div class="challenge">
+        <div class="challenge-stage">
+          <img id="challengeImg" src="media/endpoints_detected.jpg" width="1200" height="649" loading="lazy" decoding="async" alt="Monochrome cables with detected connector endpoints" />
+        </div>
+        <div class="seg-group" role="group" aria-label="Toggle challenge view">
+          <button class="seg-btn active" data-img="media/endpoints_detected.jpg">Raw scene + detected endpoints</button>
+          <button class="seg-btn" data-img="media/final_traces.jpg">TRACE&rsquo;s recovered traces</button>
+        </div>
+      </div>
+      <p class="fig-caption">A Faster R-CNN detects connectors (green), but matching which endpoint joins which, through the crossings, is what TRACE solves.</p>
+    </div>
+
+    <!-- § Bi-directional tracing + divergence -->
+    <div class="section">
+      <h2>Bi-directional tracing &amp; divergence</h2>
+      <p>
+        TRACE initiates a trace from every connector, producing two independent estimates per cable.
+        Where a trace from <strong>A</strong> and a trace from <strong>B</strong> stop agreeing is, by
+        construction, exactly where the robot is confused: a <strong>divergence point</strong>. Walk through it:
+      </p>
+
+      <div class="diverge">
+        <div class="diverge-stage">
+          <img src="media/divergence.png" width="1500" height="835" loading="lazy" decoding="async" alt="Bi-directional traces with divergence points" />
+          <!-- markers positioned as % of the composite -->
+          <span class="marker green s-endpoints" style="left:13.5%; top:19.4%"></span>
+          <span class="marker green s-endpoints" style="left:85.1%; top:39.6%"></span>
+          <span class="marker cyan s-diverge" style="left:57.9%; top:30.6%"></span>
+          <span class="marker cyan s-diverge" style="left:51.4%; top:54.7%"></span>
+        </div>
+        <div class="stepper" id="divergeStepper">
+          <button class="step-btn active" data-step="endpoints">1 · Detect connectors</button>
+          <button class="step-btn" data-step="trace">2 · Trace from each end</button>
+          <button class="step-btn" data-step="diverge">3 · Find divergence</button>
+        </div>
+        <p class="diverge-caption" id="divergeCaption">
+          <strong>A</strong> and <strong>B</strong> connectors are detected (green). Each one seeds an independent trace.
+        </p>
+      </div>
+    </div>
+
+    <!-- § Interactive perception moves -->
+    <div class="section">
+      <h2>Interactive perception primitives</h2>
+      <p>
+        Each divergence point is classified by local cable density. We then pick
+        a physical primitive: a <strong>Divergence Push</strong> for shallow tangential crossings, or a
+        <strong>Cluster Dilation</strong> for dense knots where cables visually merge.
+      </p>
+
+      <div class="seg-group density-toggle" role="group" aria-label="Cable density">
+        <span class="seg-label">Local density at divergence point:</span>
+        <button class="seg-btn active" data-density="low">Low → tangential crossing</button>
+        <button class="seg-btn" data-density="high">High → dense cluster</button>
+      </div>
+
+      <div class="primitive-cards">
+        <figure class="primitive-card" data-primitive="push">
+          <div class="primitive-stage">
+            <img src="media/div_push.png" width="455" height="516" loading="lazy" decoding="async" alt="Divergence Push" />
+          </div>
+          <figcaption>
+            <strong>Divergence Push</strong>
+            The end-effector slides along the maximum-clearance ridge, through the crossing and an
+            equal distance beyond, peeling the two cables apart.
+          </figcaption>
+        </figure>
+
+        <figure class="primitive-card" data-primitive="dilation">
+          <div class="primitive-stage">
+            <img src="media/cluster_dilation.png" width="568" height="501" loading="lazy" decoding="async" alt="Cluster Dilation" />
+            <span class="dilation-jaw jaw-a"></span>
+            <span class="dilation-jaw jaw-b"></span>
+          </div>
+          <figcaption>
+            <strong>Cluster Dilation</strong>
+            A closed gripper moves to the deepest open point, opens its jaws, and rotates 180° in opposite
+            directions to push the merged cluster apart.
+          </figcaption>
+        </figure>
+      </div>
+      <p class="fig-caption">The highlighted card is the move TRACE selects for the chosen density. Hover the Cluster Dilation card to watch the gripper rotate the cluster apart.</p>
+    </div>
+
+    <!-- § Marquee: watch a real run -->
+    <div class="section">
+      <h2>The full perception–action loop</h2>
+      <p>
+        TRACE runs a closed loop: trace from every connector, find where the traces disagree, then apply a
+        physical move to disambiguate and re-trace. Below is the <strong>same logged robot run</strong> from
+        the top of the page. Now step through all eight iterations and read the robot&rsquo;s action log as
+        the colored traces become continuous.
+      </p>
+
+      <div class="run-viewer">
+        <div class="run-stage">
+          <img id="runImg" src="media/run/iter_0.jpg" width="1400" height="779" loading="lazy" decoding="async" alt="Robot run frame" />
+          <div class="run-badge" id="runBadge">Initial estimate</div>
+        </div>
+        <div class="run-controls">
+          <button id="runPlay" class="run-play" aria-label="Play">▶ Play</button>
+          <input id="runScrub" class="run-scrub" type="range" min="0" max="7" value="0" step="1" aria-label="Iteration" />
+          <span class="run-counter"><span id="runIdx">0</span> / 7</span>
+        </div>
+        <p class="run-caption" id="runCaption">Iteration 0 — initial bi-directional trace. Several cables are still broken at crossings.</p>
+      </div>
+      <p class="fig-caption">Real pipeline run (6 endpoints). Captions are taken verbatim from the robot&rsquo;s action log.</p>
+    </div>
+
+    <!-- § Results -->
+    <div class="section">
+      <h2>Cable-tracing accuracy</h2>
+      <p>
+        Average percentage of cable length correctly traced across four complexity tiers (2–4 cables, more
+        crossings each tier). Toggle the scenario: the gap over HANDLOOM 2.0 widens sharply once foreground
+        clutter is added.
+      </p>
+
+      <div class="seg-group" role="group" aria-label="Scenario">
+        <button class="seg-btn active" data-chart="clutter">With foreground clutter (60 trials)</button>
+        <button class="seg-btn" data-chart="clean">Without clutter (50 trials)</button>
+      </div>
+
+      <div class="chart" id="chart" aria-hidden="true"></div>
+      <div class="chart-legend">
+        <span><i class="swatch" style="background:#5B8DB8"></i>HANDLOOM 2.0</span>
+        <span><i class="swatch" style="background:#E8801A"></i>TRACE</span>
+      </div>
+      <p class="fig-caption" id="chartCaption">With clutter, TRACE traced 100% of all cables in 32 of 60 trials, an average 77% improvement over HANDLOOM 2.0.</p>
+
+      <h3>Against other tracers &amp; frontier VLMs</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Method</th><th>Compute</th><th>Initial</th><th>Final</th></tr>
+          </thead>
+          <tbody>
+            <tr class="method-row"><td>RT-DLO <span class="muted">(600×600 crops)</span></td><td>0.05 s</td><td>57.1%</td><td>76.0%</td></tr>
+            <tr class="method-row"><td><strong>TRACE</strong> <span class="muted">(crops)</span></td><td>0.40 s</td><td>68.3%</td><td class="best">97.5%</td></tr>
+            <tr class="section-break method-row"><td>Nano Banana Pro <span class="muted">(VLM)</span></td><td>—</td><td>37.5%</td><td>34.8%</td></tr>
+            <tr class="method-row"><td>ChatGPT 5.2 <span class="muted">(VLM)</span></td><td>—</td><td>19.5%</td><td>26.8%</td></tr>
+            <tr class="method-row"><td><strong>TRACE</strong></td><td>0.40 s</td><td>40.2%</td><td class="best">89.3%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fig-caption">Unlike the baselines, TRACE&rsquo;s &ldquo;final&rdquo; column reflects accuracy after its interactive moves. Acting to perceive pays off.</p>
+    </div>
+
+    <!-- § VLM comparison -->
+    <div class="section">
+      <h2>TRACE vs. frontier VLMs</h2>
+      <p>
+        Asked to trace the same monochrome scene, state-of-the-art vision-language models invent connections
+        that are not there. TRACE&rsquo;s geometric, interactive approach wins decisively.
+      </p>
+      <div class="method-figure">
+        <img src="media/vlm_compare.jpg" width="1600" height="478" loading="lazy" decoding="async" alt="Monochrome scene (left) vs a VLM's hallucinated colored tracing (right)" />
+      </div>
+      <div class="badge-row">
+        <div class="badge"><span class="badge-num accent">89.3%</span>TRACE</div>
+        <div class="badge"><span class="badge-num">34.8%</span>Nano Banana Pro</div>
+        <div class="badge"><span class="badge-num">26.8%</span>ChatGPT 5.2</div>
+      </div>
+      <p class="fig-caption">Left: the real monochrome input. Right: a VLM&rsquo;s colored attempt, visibly wrong where cables cross. Final correctly-traced length; hallucinated cables scored 0.</p>
+    </div>
+
+    <!-- § BibTeX -->
+    <div class="section">
+      <h2>Citation</h2>
+      <pre class="bibtex">@inproceedings{trace2026,
+  title     = {TRACE: Interactive Bi-Directional Cable Tracing Amid Clutter},
+  author    = {Nidhya Shivakumar and Ethan Ransing and Josh Zhang and
+               Shamak Gowda and Kevin Yang and Justin Yu and Ken Goldberg},
+  booktitle = {Proceedings of the IEEE/RSJ International Conference on
+               Intelligent Robots and Systems (IROS)},
+  year      = {2026}
+}</pre>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <div class="page-wrap footer-inner">
+    <span>2026 AUTOLab, UC Berkeley</span>
+    <span>Page template adapted from the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noopener">Academic Project Page Template</a>.</span>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script type="module">
+  /* Entrance-only choreography: one orchestrated hero reveal on load, then static.
+     Progressive enhancement — if the import fails, the head-script timeout has
+     already revealed the hero, and every widget in script.js runs independently. */
+  if (document.documentElement.classList.contains('reveal-pending')) {
+    try {
+      const { animate, stagger } = await import('https://cdn.jsdelivr.net/npm/motion@11.18.2/+esm');
+      const els = document.querySelectorAll('.hero-reveal');
+      await animate(
+        els,
+        { opacity: [0, 1], transform: ['translateY(14px)', 'translateY(0px)'] },
+        { duration: 0.62, delay: stagger(0.085), easing: [0.22, 1, 0.36, 1] }
+      ).finished;
+      document.documentElement.classList.remove('reveal-pending');
+    } catch (e) {
+      document.documentElement.classList.remove('reveal-pending');
+    }
+  }
+</script>
+</body>
+</html>
