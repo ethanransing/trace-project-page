@@ -25,6 +25,17 @@
 </head>
 <body>
 
+<nav class="toc" aria-label="Section navigation">
+  <a href="#result">Overview</a>
+  <a href="#problem">Problem</a>
+  <a href="#pipeline">Pipeline</a>
+  <a href="#divergence">Divergence</a>
+  <a href="#primitives">Primitives</a>
+  <a href="#setup">Setup</a>
+  <a href="#results">Results</a>
+  <a href="#cite">Citation</a>
+</nav>
+
 <div class="page-wrap">
 
   <!-- ─── Hero ──────────────────────────────────────────── -->
@@ -51,33 +62,46 @@
       </div>
 
       <div class="header-actions">
-        <a href="#" class="action-link" target="_blank" rel="noopener" title="TODO: link the IROS 2026 PDF">
+        <!-- TODO: when the IROS 2026 PDF / arXiv is live, swap each span for
+             <a href="..." class="action-link" target="_blank" rel="noopener"> and drop the "soon" tag. -->
+        <span class="action-link is-soon" title="Paper link coming soon" aria-disabled="true">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
             <polyline points="14 2 14 8 20 8"/>
             <line x1="9" y1="13" x2="15" y2="13"/>
             <line x1="9" y1="17" x2="15" y2="17"/>
           </svg>
-          Paper (PDF)
-        </a>
-        <a href="#" class="action-link" target="_blank" rel="noopener" title="TODO: link the code repository">
+          Paper (PDF) <span class="soon-tag">soon</span>
+        </span>
+        <span class="action-link is-soon" title="Code repository coming soon" aria-disabled="true">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
           </svg>
-          Code
+          Code <span class="soon-tag">soon</span>
+        </span>
+        <a class="action-link contact-link" href="mailto:ethan.ransing@berkeley.edu">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2"/>
+            <polyline points="3 7 12 13 21 7"/>
+          </svg>
+          Contact
         </a>
       </div>
     </div>
 
     <p class="hero-claim hero-reveal">
-      When every cable looks identical, a robot can&rsquo;t trace by sight. TRACE traces from
-      both ends, finds where the two estimates disagree, and physically acts to
-      resolve the ambiguity.
+      Monochrome cables cannot be told apart by appearance alone. TRACE traces each
+      cable from both ends, locates where the two estimates disagree, and manipulates
+      the cables to resolve ambiguities.
     </p>
 
-    <figure class="hero-stage hero-reveal">
-      <img id="heroImg" src="media/run/iter_0.jpg" width="1400" height="779" fetchpriority="high" decoding="async" alt="A robot incrementally tracing monochrome cables, resolving crossings over eight iterations" />
-      <figcaption class="hero-badge" id="heroBadge" aria-hidden="true">Initial estimate</figcaption>
+    <figure class="hero-stage hero-reveal hero-splash" aria-label="Splash video placeholder">
+      <img class="hero-poster" src="media/run/iter_7.jpg" width="1400" height="779" fetchpriority="high" decoding="async" alt="Final result of a TRACE run: six monochrome cables recovered as continuous, topologically consistent colored traces" />
+      <div class="splash-overlay" aria-hidden="true">
+        <span class="splash-play">▶</span>
+        <span class="splash-title">Splash video &mdash; placeholder</span>
+        <span class="splash-sub">Replace with a continuous overhead recording of one full ABB&nbsp;YuMi run (à la WARP-RM&rsquo;s &ldquo;1&times; speed, autonomous&rdquo;). Showing the resolved end-state for now.</span>
+      </div>
     </figure>
   </header>
 
@@ -86,22 +110,24 @@
     <!-- § Result hook -->
     <div class="section result-hook" id="result">
       <p class="hook-line">
-        Across 60 cluttered trials, TRACE lifts cable-tracing accuracy from
-        <span class="stat">~60%</span> to <span class="stat">~90%</span>: a
-        <span class="stat">+77%</span> average gain over the prior state of the art,
-        and a perfect trace in <span class="stat">32&#8239;/&#8239;60</span> scenes.
+        Across 60 cluttered trials, TRACE increases the proportion of cable length
+        correctly traced from <span class="stat">40.2%</span> to
+        <span class="stat">89.3%</span> &mdash; a <span class="stat">77%</span>
+        average improvement over HANDLOOM&nbsp;2.0, the prior state of the art &mdash; and
+        traces every cable correctly in <span class="stat">32&#8239;/&#8239;60</span> scenes.
       </p>
     </div>
 
     <!-- § The monochrome challenge -->
-    <div class="section">
+    <div class="section" id="problem">
       <h2>The monochrome tracing problem</h2>
       <p>
-        Color makes tracing easy. When cables are <strong>monochrome</strong>, every strand is visually
-        indistinguishable. At each crossing it is ambiguous which way a cable continues. A robot cannot
-        rely on appearance; it must reason about geometry, and where geometry is ambiguous, it
-        must act to find out. Toggle below: all the visual system can anchor to are the detected
-        connector endpoints.
+        When cables differ in color, each one can be followed by its hue. Monochrome cables
+        remove that cue: every strand looks the same, so at each crossing it is ambiguous which
+        way a given cable continues. The system
+        must instead reason about geometry, and where the geometry is ambiguous,
+        resolve it by interacting with the scene. In the figure below, the only reliable visual
+        anchors are the detected connector endpoints.
       </p>
       <div class="challenge">
         <div class="challenge-stage">
@@ -112,16 +138,49 @@
           <button class="seg-btn" data-img="media/final_traces.jpg">TRACE&rsquo;s recovered traces</button>
         </div>
       </div>
-      <p class="fig-caption">A Faster R-CNN detects connectors (green), but matching which endpoint joins which, through the crossings, is what TRACE solves.</p>
+      <p class="fig-caption">A Faster R-CNN detects the connectors (green). TRACE finds which endpoint connects to which and recovers the correct trace for each cable.</p>
+    </div>
+
+    <!-- § Pipeline / architecture -->
+    <div class="section" id="pipeline">
+      <h2>The TRACE pipeline</h2>
+      <p>
+        TRACE builds on the MANIP framework for modular interactive perception. Each iteration is a
+        closed loop of three stages: estimate the state of the cables, identify where that estimate is
+        uncertain, and act to reduce the uncertainty. The system then re-images the scene and repeats
+        until the trace is topologically consistent.
+      </p>
+
+      <div class="method-figure">
+        <img src="media/architecture.png" width="2202" height="710" loading="lazy" decoding="async" alt="TRACE architecture: a 4K overhead RGB image feeds the State Estimator (Object Detection + HANDLOOM), then the Divergence Classifier + Action Selector labels each divergence point as object, tangential crossing, or cluster, then the IP Primitives stage runs Cluster Dilation, Tangential Push, or Object Decluttering, and the loop continues until Termination." />
+      </div>
+      <p class="fig-caption">Fig.&nbsp;2 &mdash; the TRACE architecture (MANIP framework). The loop re-images and re-traces until every cable is topologically consistent, up to <strong>T<sub>max</sub>&nbsp;=&nbsp;10</strong> iterations.</p>
+
+      <p>
+        The state estimator pairs a Faster R-CNN connector detector with the
+        HANDLOOM&nbsp;1.0 single-cable tracer, applied from <em>both</em> ends of each cable. The
+        Meta Policy Selector then combines three signals that the prior heuristic baselines do not
+        consider jointly &mdash; object masks, a local cable-density estimate, and the consistency
+        between the two traces &mdash; to select an appropriate action. The method operates on
+        monocular RGB images alone, without depth, stereo, or range data.
+      </p>
     </div>
 
     <!-- § Bi-directional tracing + divergence -->
-    <div class="section">
+    <div class="section" id="divergence">
       <h2>Bi-directional tracing &amp; divergence</h2>
       <p>
-        TRACE initiates a trace from every connector, producing two independent estimates per cable.
-        Where a trace from <strong>A</strong> and a trace from <strong>B</strong> stop agreeing is, by
-        construction, exactly where the robot is confused: a <strong>divergence point</strong>. Walk through it:
+        TRACE traces from every connector, which yields two independent estimates for each cable.
+        The point at which the estimate from connector A and the estimate from connector B cease to
+        agree is, by construction, where the cable&rsquo;s identity is uncertain &mdash; a divergence
+        point. The steps below illustrate this.
+      </p>
+      <p>
+        Identifying these points proceeds in two passes. The first checks reciprocal consistency,
+        flagging traces whose forward and backward directions fail to overlap. The second analyzes
+        each flagged location and classifies it by how densely cables are packed nearby: a
+        <em>cable cluster</em> where they are dense, or a shallow <em>tangential crossing</em> where
+        they merely cross.
       </p>
 
       <div class="diverge">
@@ -139,86 +198,139 @@
           <button class="step-btn" data-step="diverge">3 · Find divergence</button>
         </div>
         <p class="diverge-caption" id="divergeCaption">
-          <strong>A</strong> and <strong>B</strong> connectors are detected (green). Each one seeds an independent trace.
+          A and B connectors are detected (green). Each one seeds an independent trace.
         </p>
       </div>
     </div>
 
     <!-- § Interactive perception moves -->
-    <div class="section">
+    <div class="section" id="primitives">
       <h2>Interactive perception primitives</h2>
       <p>
-        Each divergence point is classified by local cable density. We then pick
-        a physical primitive: a <strong>Divergence Push</strong> for shallow tangential crossings, or a
-        <strong>Cluster Dilation</strong> for dense knots where cables visually merge.
+        At each divergence point, the Meta Policy Selector identifies one of three situations and
+        applies the corresponding action: Bimanual Object Decluttering when a foreground object
+        occludes the cable, a Divergence Push at a shallow tangential crossing, or a Cluster Dilation
+        at a dense knot where cables visually merge. Use the toggle to see each case.
       </p>
 
-      <div class="seg-group density-toggle" role="group" aria-label="Cable density">
-        <span class="seg-label">Local density at divergence point:</span>
-        <button class="seg-btn active" data-density="low">Low → tangential crossing</button>
-        <button class="seg-btn" data-density="high">High → dense cluster</button>
+      <div class="seg-group density-toggle" role="group" aria-label="What the Meta Policy Selector detects">
+        <span class="seg-label">Selector detects:</span>
+        <button class="seg-btn" data-pick="declutter">Object on a cable</button>
+        <button class="seg-btn active" data-pick="push">Tangential crossing (low density)</button>
+        <button class="seg-btn" data-pick="dilation">Cable cluster (high density)</button>
       </div>
 
       <div class="primitive-cards">
+        <figure class="primitive-card" data-primitive="declutter">
+          <div class="primitive-stage">
+            <img src="media/declutter_placeholder.svg" width="540" height="500" loading="lazy" decoding="async" alt="Placeholder: bimanual object decluttering" />
+          </div>
+          <figcaption>
+            <strong>Bimanual Object Decluttering</strong>
+            A segmentation model finds objects resting on the cables; a pick-and-place clears them. When two
+            objects sit on opposite sides, both YuMi arms clear them at once.
+          </figcaption>
+        </figure>
+
         <figure class="primitive-card" data-primitive="push">
           <div class="primitive-stage">
-            <img src="media/div_push.png" width="455" height="516" loading="lazy" decoding="async" alt="Divergence Push" />
+            <img src="media/div_push.png" width="455" height="516" loading="lazy" decoding="async" alt="Divergence Push along the cable-distance-transform ridge" />
           </div>
           <figcaption>
             <strong>Divergence Push</strong>
-            The end-effector slides along the maximum-clearance ridge, through the crossing and an
-            equal distance beyond, peeling the two cables apart.
+            TRACE computes a Cable Distance Transform and extracts its ridges &mdash; the paths of
+            maximum clearance between cables &mdash; using a Frangi vesselness filter. The end-effector
+            follows that ridge through the crossing and a short distance (12&nbsp;px) beyond, separating
+            the two cables.
           </figcaption>
         </figure>
 
         <figure class="primitive-card" data-primitive="dilation">
           <div class="primitive-stage">
-            <img src="media/cluster_dilation.png" width="568" height="501" loading="lazy" decoding="async" alt="Cluster Dilation" />
+            <img src="media/cluster_dilation.png" width="568" height="501" loading="lazy" decoding="async" alt="Cluster Dilation at the deepest open point" />
             <span class="dilation-jaw jaw-a"></span>
             <span class="dilation-jaw jaw-b"></span>
           </div>
           <figcaption>
             <strong>Cluster Dilation</strong>
-            A closed gripper moves to the deepest open point, opens its jaws, and rotates 180° in opposite
-            directions to push the merged cluster apart.
+            A closed gripper moves to the most open point within the cluster, opens its jaws, and rotates
+            180° in each direction to spread the merged cables apart.
           </figcaption>
         </figure>
       </div>
-      <p class="fig-caption">The highlighted card is the move TRACE selects for the chosen density. Hover the Cluster Dilation card to watch the gripper rotate the cluster apart.</p>
+      <p class="fig-caption">The highlighted card is the action TRACE selects for the chosen case. Hover the Cluster Dilation card to see the gripper motion. <em>Object-decluttering frame is a placeholder &mdash; flagged.</em></p>
     </div>
 
     <!-- § Marquee: watch a real run -->
-    <div class="section">
+    <div class="section" id="loop">
       <h2>The full perception–action loop</h2>
       <p>
-        TRACE runs a closed loop: trace from every connector, find where the traces disagree, then apply a
-        physical move to disambiguate and re-trace. Below is the <strong>same logged robot run</strong> from
-        the top of the page. Now step through all eight iterations and read the robot&rsquo;s action log as
-        the colored traces become continuous.
+        The viewer below shows one complete logged run of this loop, on the hardest setting &mdash;
+        4&nbsp;cables, 8&nbsp;connectors. It alternates between perception (the density heatmap of all eight
+        traces) and action (the Divergence&nbsp;Push the robot plans); each caption is drawn from the
+        system&rsquo;s action log, and the colored traces become continuous as the ambiguities are resolved.
       </p>
 
       <div class="run-viewer">
         <div class="run-stage">
-          <img id="runImg" src="media/run/iter_0.jpg" width="1400" height="779" loading="lazy" decoding="async" alt="Robot run frame" />
+          <img id="runImg" src="media/loop/iter_0.jpg" width="1400" height="779" loading="lazy" decoding="async" alt="Robot run frame" />
           <div class="run-badge" id="runBadge">Initial estimate</div>
         </div>
         <div class="run-controls">
           <button id="runPlay" class="run-play" aria-label="Play">▶ Play</button>
-          <input id="runScrub" class="run-scrub" type="range" min="0" max="7" value="0" step="1" aria-label="Iteration" />
-          <span class="run-counter"><span id="runIdx">0</span> / 7</span>
+          <input id="runScrub" class="run-scrub" type="range" min="0" max="8" value="0" step="1" aria-label="Iteration" />
+          <span class="run-counter"><span id="runIdx">0</span> / 8</span>
         </div>
-        <p class="run-caption" id="runCaption">Iteration 0 — initial bi-directional trace. Several cables are still broken at crossings.</p>
+        <p class="run-caption" id="runCaption">Iteration 0 — initial bi-directional trace of all eight connectors. Many cables break at crossings.</p>
       </div>
-      <p class="fig-caption">Real pipeline run (6 endpoints). Captions are taken verbatim from the robot&rsquo;s action log.</p>
+      <p class="fig-caption">A complete pipeline run on an eight-connector Tier&nbsp;4 scene.</p>
+    </div>
+
+    <!-- § Experimental setup -->
+    <div class="section" id="setup">
+      <h2>Experimental setup</h2>
+      <p>
+        All evaluation is conducted on physical hardware, comprising <strong>110 trials</strong> in
+        total: 50 without foreground clutter and 60 with it (15 per tier). No simulation or depth
+        sensing is used.
+      </p>
+
+      <dl class="spec">
+        <div><dt>Robot</dt><dd>Bimanual ABB&nbsp;YuMi; motion planning via Jacobi&nbsp;Motion</dd></div>
+        <div><dt>Camera</dt><dd>Overhead Logitech&nbsp;BRIO, 4K, 1&nbsp;m above the workspace</dd></div>
+        <div><dt>Perception</dt><dd>Monocular RGB only &mdash; no depth, stereo, or range data</dd></div>
+        <div><dt>Cables</dt><dd>2&ndash;4 white 6-foot USB-C&nbsp;&harr;&nbsp;USB-C cables, randomly arranged</dd></div>
+        <div><dt>Endpoints</dt><dd>Connectors seated in two 8&times;5&nbsp;cm black USB hubs on opposite sides</dd></div>
+        <div><dt>Compute / iter</dt><dd>Tier&nbsp;4: <strong>6.4&nbsp;s</strong> tracing + <strong>13.4&nbsp;s</strong> execution (Ryzen&nbsp;7&nbsp;7700X, RTX&nbsp;4090)</dd></div>
+      </dl>
+
+      <h3>Tiers of complexity</h3>
+      <p>
+        Evaluation follows the tiered protocol from MANIP: four tiers scale the scene from 2 cables and
+        2 crossings up to 4 cables and 4&ndash;5 crossings, with 3&ndash;4 clutter objects throughout.
+      </p>
+      <div class="table-wrap">
+        <table class="tier-table">
+          <thead>
+            <tr><th>Per scene</th><th>Tier&nbsp;1</th><th>Tier&nbsp;2</th><th>Tier&nbsp;3</th><th>Tier&nbsp;4</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Cables</td><td>2</td><td>2</td><td>3</td><td>4</td></tr>
+            <tr><td>Tangential crossings</td><td>2</td><td>3</td><td>3&ndash;4</td><td>4&ndash;5</td></tr>
+            <tr><td>Foreground objects</td><td>3&ndash;4</td><td>3&ndash;4</td><td>3&ndash;4</td><td>3&ndash;4</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fig-caption">The four complexity tiers used for every evaluation below.</p>
     </div>
 
     <!-- § Results -->
-    <div class="section">
+    <div class="section" id="results">
       <h2>Cable-tracing accuracy</h2>
       <p>
-        Average percentage of cable length correctly traced across four complexity tiers (2–4 cables, more
-        crossings each tier). Toggle the scenario: the gap over HANDLOOM 2.0 widens sharply once foreground
-        clutter is added.
+        Each bar shows the average percentage of cable length correctly traced, across the four
+        complexity tiers. The two scenarios can be compared using the toggle; the margin over
+        HANDLOOM 2.0 grows substantially once foreground clutter is present.
       </p>
 
       <div class="seg-group" role="group" aria-label="Scenario">
@@ -231,7 +343,16 @@
         <span><i class="swatch" style="background:#5B8DB8"></i>HANDLOOM 2.0</span>
         <span><i class="swatch" style="background:#E8801A"></i>TRACE</span>
       </div>
-      <p class="fig-caption" id="chartCaption">With clutter, TRACE traced 100% of all cables in 32 of 60 trials, an average 77% improvement over HANDLOOM 2.0.</p>
+      <p class="fig-caption" id="chartCaption">With foreground clutter, TRACE correctly traces all cables in 32 of 60 trials, a 77% average improvement over HANDLOOM 2.0.</p>
+
+      <div class="table-wrap">
+        <table class="tier-table" id="tierStats">
+          <thead>
+            <tr><th>% length traced</th><th>Tier&nbsp;1</th><th>Tier&nbsp;2</th><th>Tier&nbsp;3</th><th>Tier&nbsp;4</th></tr>
+          </thead>
+          <tbody><!-- rendered by script.js to mirror the active scenario --></tbody>
+        </table>
+      </div>
 
       <h3>Against other tracers &amp; frontier VLMs</h3>
       <div class="table-wrap">
@@ -248,15 +369,16 @@
           </tbody>
         </table>
       </div>
-      <p class="fig-caption">Unlike the baselines, TRACE&rsquo;s &ldquo;final&rdquo; column reflects accuracy after its interactive moves. Acting to perceive pays off.</p>
+      <p class="fig-caption">For TRACE, the &ldquo;final&rdquo; column reflects accuracy after its interactive moves; the baseline methods are evaluated from a single pass.</p>
     </div>
 
     <!-- § VLM comparison -->
     <div class="section">
       <h2>TRACE vs. frontier VLMs</h2>
       <p>
-        Asked to trace the same monochrome scene, state-of-the-art vision-language models invent connections
-        that are not there. TRACE&rsquo;s geometric, interactive approach wins decisively.
+        When asked to trace the same monochrome scene, current vision-language models tend to produce
+        connections that are not present in the image. TRACE&rsquo;s geometric, interactive approach is
+        substantially more accurate.
       </p>
       <div class="method-figure">
         <img src="media/vlm_compare.jpg" width="1600" height="478" loading="lazy" decoding="async" alt="Monochrome scene (left) vs a VLM's hallucinated colored tracing (right)" />
@@ -266,11 +388,11 @@
         <div class="badge"><span class="badge-num">34.8%</span>Nano Banana Pro</div>
         <div class="badge"><span class="badge-num">26.8%</span>ChatGPT 5.2</div>
       </div>
-      <p class="fig-caption">Left: the real monochrome input. Right: a VLM&rsquo;s colored attempt, visibly wrong where cables cross. Final correctly-traced length; hallucinated cables scored 0.</p>
+      <p class="fig-caption">Left: the monochrome input. Right: a VLM&rsquo;s colored reconstruction, which is incorrect where cables cross. Values are final correctly-traced length; spurious cables are scored as zero.</p>
     </div>
 
     <!-- § BibTeX -->
-    <div class="section">
+    <div class="section" id="cite">
       <h2>Citation</h2>
       <pre class="bibtex">@inproceedings{trace2026,
   title     = {TRACE: Interactive Bi-Directional Cable Tracing Amid Clutter},

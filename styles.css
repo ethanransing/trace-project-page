@@ -13,10 +13,11 @@
   --text:         oklch(18% 0.01 240);
   --text-secondary: oklch(42% 0.012 240);
   --text-tertiary:  oklch(62% 0.010 240);
-  --accent:       oklch(42% 0.14 255);
-  --accent-mid:   oklch(55% 0.13 255);
-  --accent-light: oklch(96% 0.025 255);
-  --accent-rule:  oklch(42% 0.14 255);
+  /* UC Berkeley brand palette — brand.berkeley.edu/visual-identity/colors */
+  --accent:       #002676;            /* Berkeley Blue — the single brand accent */
+  --accent-mid:   #004AAE;            /* Blue Medium — hover / secondary accent */
+  --accent-light: #edf2fc;            /* faint Berkeley-blue wash */
+  --accent-rule:  #002676;
 
   --font-display: 'Newsreader', Georgia, 'Times New Roman', serif;
   --font-body:    'DM Sans', -apple-system, Helvetica, sans-serif;
@@ -217,6 +218,18 @@ p {
 p + p { margin-top: var(--space-md); }
 
 p strong { color: var(--text); font-weight: 600; }
+
+/* Breathing room when a paragraph (incl. a fig-caption) sits directly above a
+   figure / table / control. These containers only carry margin-bottom, so a
+   preceding <p> would otherwise butt right up against them. */
+p + .method-figure,
+p + .challenge,
+p + .diverge,
+p + .seg-group,
+p + .run-viewer,
+p + .table-wrap,
+p + .figure-row,
+p + .video-stage { margin-top: var(--space-lg); }
 
 /* ─── Method figure ──────────────────────────────────── */
 .method-figure {
@@ -479,7 +492,7 @@ footer {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--surface);
-  background: oklch(42% 0.14 255 / 0.92);
+  background: rgba(0, 38, 118, 0.92);
   border-radius: var(--radius-sm);
   padding: 5px 11px;
 }
@@ -590,14 +603,18 @@ footer {
 /* ─── Interactive perception cards ───────────────────── */
 .primitive-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-md);
   margin-bottom: var(--space-sm);
 }
 
-@media (max-width: 600px) {
-  .primitive-cards { grid-template-columns: 1fr; }
+@media (max-width: 760px) {
+  .primitive-cards { grid-template-columns: 1fr; max-width: 30rem; }
 }
+
+/* Keep all three primitive stages the same height so photos + the SVG placeholder align. */
+.primitive-stage { aspect-ratio: 1 / 1; }
+.primitive-stage img { width: 100%; height: 100%; object-fit: cover; }
 
 .primitive-card {
   margin: 0;
@@ -813,7 +830,7 @@ footer {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--surface);
-  background: oklch(42% 0.14 255 / 0.92);
+  background: rgba(0, 38, 118, 0.92);
   border-radius: var(--radius-sm);
   padding: 5px 11px;
 }
@@ -839,7 +856,8 @@ footer {
   font-size: clamp(1.3rem, 3vw, 1.95rem);
   line-height: 1.42;
   color: var(--text);
-  max-width: 24ch;
+  max-width: 38ch;
+  text-wrap: balance;
 }
 
 .hook-line .stat {
@@ -890,3 +908,159 @@ footer {
   .dilation-jaw { animation: none !important; }
   .bar { transition: none; }
 }
+
+/* ─── Working TODO flag (temporary; remove before publishing) ─── */
+.todo-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  padding: 6px 12px 6px 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: oklch(45% 0.15 35);
+  background: oklch(96% 0.04 60);
+  border: 1px dashed oklch(70% 0.14 45);
+  border-radius: var(--radius-sm);
+}
+.todo-flag span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--surface);
+  background: oklch(60% 0.18 35);
+  border-radius: 3px;
+  padding: 2px 6px;
+}
+
+/* ─── Sticky section TOC (wide screens only; lives in the left gutter) ─── */
+.toc {
+  position: fixed;
+  top: 50%;
+  left: max(16px, calc(50vw - 560px));
+  transform: translateY(-50%);
+  width: 144px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  z-index: 10;
+}
+
+.toc a {
+  font-size: 0.92rem;
+  line-height: 1.3;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.14s;
+}
+
+.toc a:hover { color: var(--accent); }
+
+.toc a.current {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+@media (max-width: 1179px) { .toc { display: none; } }
+
+@media (prefers-reduced-motion: reduce) { .toc a { transition: none; } }
+
+/* ─── Hero splash placeholder ───────────────────────────── */
+.hero-poster { opacity: 0.42; }
+
+.splash-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-sm);
+  padding: var(--space-xl);
+}
+
+.splash-play {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border: 2px solid oklch(100% 0 0 / 0.7);
+  border-radius: 50%;
+  color: oklch(100% 0 0 / 0.92);
+  font-size: 1.05rem;
+  padding-left: 4px;
+  margin-bottom: var(--space-xs);
+}
+
+.splash-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: oklch(100% 0 0 / 0.95);
+}
+
+.splash-sub {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  max-width: 46ch;
+  color: oklch(100% 0 0 / 0.74);
+}
+
+/* ─── Action link: coming-soon state ─── */
+.action-link.is-soon {
+  color: var(--text-tertiary);
+  border-color: var(--border);
+  cursor: default;
+}
+.action-link.is-soon:hover {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text-tertiary);
+}
+.action-link.is-soon svg { opacity: 0.45; }
+.action-link.is-soon:hover svg { opacity: 0.45; }
+
+.soon-tag {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1px 5px;
+  margin-left: 4px;
+}
+
+/* ─── Experimental-setup spec sheet ─────────────────────── */
+.spec {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md) var(--space-xl);
+  margin: var(--space-lg) 0 var(--space-md);
+}
+.spec > div {
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border);
+}
+.spec dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 3px;
+}
+.spec dd { margin: 0; font-size: 0.95rem; line-height: 1.5; color: var(--text-secondary); }
+.spec dd strong { color: var(--text); font-weight: 600; }
+
+@media (max-width: 560px) { .spec { grid-template-columns: 1fr; } }
+
+/* ─── Tier / numeric tables (centered columns, unlike the right-aligned results table) ─── */
+.tier-table th,
+.tier-table td { text-align: center; padding-left: var(--space-md); padding-right: var(--space-md); }
+.tier-table th:first-child,
+.tier-table td:first-child { text-align: left; padding-left: 0; }
+.tier-table th:not(:first-child) { padding-right: var(--space-md); }
+.tier-table .muted { font-size: 0.92em; }
