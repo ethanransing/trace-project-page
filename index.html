@@ -26,7 +26,7 @@
 <body>
 
 <nav class="toc" aria-label="Section navigation">
-  <a href="#result">Overview</a>
+  <!-- <a href="#result">Overview</a> -->
   <a href="#problem">Problem</a>
   <a href="#pipeline">Pipeline</a>
   <a href="#divergence">Divergence</a>
@@ -96,18 +96,18 @@
     </p>
 
     <figure class="hero-stage hero-reveal hero-splash" aria-label="Splash video placeholder">
-      <img class="hero-poster" src="media/run/iter_7.jpg" width="1400" height="779" fetchpriority="high" decoding="async" alt="Final result of a TRACE run: six monochrome cables recovered as continuous, topologically consistent colored traces" />
+      <img class="hero-poster" src="media/splash.png" width="1400" height="779" fetchpriority="high" decoding="async" alt="A TRACE run: cables recovered as continuous, topologically consistent colored traces on a dark workspace" />
       <div class="splash-overlay" aria-hidden="true">
         <span class="splash-play">▶</span>
         <span class="splash-title">Splash video &mdash; placeholder</span>
-        <span class="splash-sub">Replace with a continuous overhead recording of one full ABB&nbsp;YuMi run (à la WARP-RM&rsquo;s &ldquo;1&times; speed, autonomous&rdquo;). Showing the resolved end-state for now.</span>
+        <span class="splash-sub">Replace with continuous recording of one run</span>
       </div>
     </figure>
   </header>
 
   <main>
 
-    <!-- § Result hook -->
+    <!-- § Result hook — temporarily disabled
     <div class="section result-hook" id="result">
       <p class="hook-line">
         Across 60 cluttered trials, TRACE increases the proportion of cable length
@@ -117,6 +117,7 @@
         traces every cable correctly in <span class="stat">32&#8239;/&#8239;60</span> scenes.
       </p>
     </div>
+    -->
 
     <!-- § The monochrome challenge -->
     <div class="section" id="problem">
@@ -154,11 +155,11 @@
       <div class="method-figure">
         <img src="media/architecture.png" width="2202" height="710" loading="lazy" decoding="async" alt="TRACE architecture: a 4K overhead RGB image feeds the State Estimator (Object Detection + HANDLOOM), then the Divergence Classifier + Action Selector labels each divergence point as object, tangential crossing, or cluster, then the IP Primitives stage runs Cluster Dilation, Tangential Push, or Object Decluttering, and the loop continues until Termination." />
       </div>
-      <p class="fig-caption">Fig.&nbsp;2 &mdash; the TRACE architecture (MANIP framework). The loop re-images and re-traces until every cable is topologically consistent, up to <strong>T<sub>max</sub>&nbsp;=&nbsp;10</strong> iterations.</p>
+      <p class="fig-caption">Fig.&nbsp;2 &mdash; the TRACE architecture (MANIP framework). The loop re-images and re-traces until every cable is topologically consistent, up to T<sub>max</sub>&nbsp;=&nbsp;10 iterations.</p>
 
       <p>
         The state estimator pairs a Faster R-CNN connector detector with the
-        HANDLOOM&nbsp;1.0 single-cable tracer, applied from <em>both</em> ends of each cable. The
+        HANDLOOM&nbsp;1.0 single-cable tracer, applied from both ends of each cable. The
         Meta Policy Selector then combines three signals that the prior heuristic baselines do not
         consider jointly &mdash; object masks, a local cable-density estimate, and the consistency
         between the two traces &mdash; to select an appropriate action. The method operates on
@@ -179,7 +180,7 @@
         Identifying these points proceeds in two passes. The first checks reciprocal consistency,
         flagging traces whose forward and backward directions fail to overlap. The second analyzes
         each flagged location and classifies it by how densely cables are packed nearby: a
-        <em>cable cluster</em> where they are dense, or a shallow <em>tangential crossing</em> where
+        cable cluster where they are dense, or a shallow tangential crossing where
         they merely cross.
       </p>
 
@@ -290,7 +291,7 @@
     <div class="section" id="setup">
       <h2>Experimental setup</h2>
       <p>
-        All evaluation is conducted on physical hardware, comprising <strong>110 trials</strong> in
+        All evaluation is conducted on physical hardware, comprising 110 trials in
         total: 50 without foreground clutter and 60 with it (15 per tier). No simulation or depth
         sensing is used.
       </p>
@@ -301,7 +302,7 @@
         <div><dt>Perception</dt><dd>Monocular RGB only &mdash; no depth, stereo, or range data</dd></div>
         <div><dt>Cables</dt><dd>2&ndash;4 white 6-foot USB-C&nbsp;&harr;&nbsp;USB-C cables, randomly arranged</dd></div>
         <div><dt>Endpoints</dt><dd>Connectors seated in two 8&times;5&nbsp;cm black USB hubs on opposite sides</dd></div>
-        <div><dt>Compute / iter</dt><dd>Tier&nbsp;4: <strong>6.4&nbsp;s</strong> tracing + <strong>13.4&nbsp;s</strong> execution (Ryzen&nbsp;7&nbsp;7700X, RTX&nbsp;4090)</dd></div>
+        <div><dt>Compute / iter</dt><dd>Tier&nbsp;4: 6.4&nbsp;s tracing + 13.4&nbsp;s execution (Ryzen&nbsp;7&nbsp;7700X, RTX&nbsp;4090)</dd></div>
       </dl>
 
       <h3>Tiers of complexity</h3>
